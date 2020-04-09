@@ -74,11 +74,13 @@ body {
   margin: 20px;
   display: flex;
   flex-wrap: wrap;
+  justify-content: space-between;
 }
 @media (min-width: 500px) {
   .siteList {
     margin-left: 0px;
     margin-right: -25px;
+    justify-content: flex-start;
   }
   .siteList > li {
     margin-right: 25px;
@@ -98,6 +100,7 @@ body {
   border-radius: 4px;
   padding: 20px 0px;
   position: relative;
+  cursor: pointer;
 }
 .siteList .site > .log {
   width: 64px;
@@ -116,6 +119,11 @@ body {
   position: absolute;
   right: 8px;
   top: 4px;
+  display: none;
+  cursor: default;
+}
+.siteList .site:hover > .close {
+  display: block;
 }
 .siteList .addButton {
   background: white;
