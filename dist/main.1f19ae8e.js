@@ -118,17 +118,47 @@ parcelRequire = (function (modules, cache, entry, globalName) {
 
   return newRequire;
 })({"main.js":[function(require,module,exports) {
+var $siteList = $(".siteList");
+var $lastList = $siteList.find(".lastList");
+var x = localStorage.getItem("x");
+var xObject = JSON.parse(x);
+var hashMap = xObject || [{
+  logo: "A",
+  logoType: "text",
+  url: "https://www.baidu.com/"
+}, {
+  logo: "img/bilibili.png",
+  logoType: "text",
+  url: "https://www.bilibili.com/"
+}];
+
+var render = function render() {
+  hashMap.forEach(function (node) {
+    var $li = $("<li>\n  <a href=\"".concat(node.url, "\">\n    <div class=\"site\">\n      <div class=\"log\">").concat(node.logo[0], "</div>\n      <div class=\"link\">").concat(node.url, "</div>\n    </div>\n  </a>\n</li>")).insertBefore($lastList);
+  });
+};
+
+render();
 $(".addButton").on("click", function () {
   var url = window.prompt("请输入要添加的网址");
 
   if (url.indexOf("http") !== 0) {
-    url1 = "//" + url;
+    url = "http://" + url;
   }
 
-  var $siteList = $(".siteList");
-  var $lastList = $siteList.find(".lastList");
-  var $li = $("<li>\n          <a href=\"".concat(url1, "\">\n            <div class=\"site\">\n              <div class=\"log\">").concat(url[0], "</div>\n              <div class=\"link\">").concat(url, "</div>\n            </div>\n          </a>\n        </li>")).insertBefore($lastList);
+  hashMap.push({
+    logo: url[7],
+    logoType: "text",
+    url: url
+  });
+  $siteList.find("li:not(.lastList)").remove();
+  render();
 });
+
+window.onbeforeunload = function () {
+  var string = JSON.stringify(hashMap);
+  window.localStorage.setItem("x", string);
+};
 },{}],"C:/Users/mengpeng/AppData/Roaming/npm/node_modules/parcel/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
 var OVERLAY_ID = '__parcel__error__overlay__';
@@ -157,7 +187,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "49225" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "61940" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};
