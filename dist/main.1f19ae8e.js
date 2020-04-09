@@ -124,17 +124,28 @@ var x = localStorage.getItem("x");
 var xObject = JSON.parse(x);
 var hashMap = xObject || [{
   logo: "A",
-  logoType: "text",
   url: "https://www.baidu.com/"
 }, {
-  logo: "img/bilibili.png",
-  logoType: "text",
+  logo: "B",
   url: "https://www.bilibili.com/"
 }];
 
+var simplifyUrl = function simplifyUrl(url) {
+  return url.replace("https://", "").replace("http://", "").replace("www.", "").replace(/\/.*/, ""); // 删除 / 开头的内容
+};
+
 var render = function render() {
-  hashMap.forEach(function (node) {
-    var $li = $("<li>\n  <a href=\"".concat(node.url, "\">\n    <div class=\"site\">\n      <div class=\"log\">").concat(node.logo[0], "</div>\n      <div class=\"link\">").concat(node.url, "</div>\n    </div>\n  </a>\n</li>")).insertBefore($lastList);
+  $siteList.find("li:not(.lastList)").remove();
+  hashMap.forEach(function (node, index) {
+    var $li = $("<li>\n  \n    <div class=\"site\">\n      <div class=\"log\">".concat(node.logo, "</div>\n      <div class=\"link\">").concat(simplifyUrl(node.url), "</div>\n      <div class=\"close\">\n        <svg class=\"icon\">\n          <use xlink:href=\"#icon-close\"></use>\n        </svg>\n      </div>\n    </div>\n  \n</li>")).insertBefore($lastList);
+    $li.on("click", function () {
+      window.open(node.url);
+    });
+    $li.on("click", ".close", function (e) {
+      e.stopPropagation();
+      hashMap.splice(index, 1);
+      render();
+    });
   });
 };
 
@@ -147,11 +158,9 @@ $(".addButton").on("click", function () {
   }
 
   hashMap.push({
-    logo: url[7],
-    logoType: "text",
+    logo: simplifyUrl(url)[0].toUpperCase(),
     url: url
   });
-  $siteList.find("li:not(.lastList)").remove();
   render();
 });
 
@@ -187,7 +196,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "61940" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "55449" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

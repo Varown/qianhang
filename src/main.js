@@ -4,24 +4,43 @@ const $lastList = $siteList.find(".lastList");
 const x = localStorage.getItem("x");
 const xObject = JSON.parse(x);
 const hashMap = xObject || [
-  { logo: "A", logoType: "text", url: "https://www.baidu.com/" },
-  {
-    logo: "img/bilibili.png",
-    logoType: "text",
-    url: "https://www.bilibili.com/",
-  },
+  { logo: "A", url: "https://www.baidu.com/" },
+  { logo: "B", url: "https://www.bilibili.com/" },
 ];
 
+const simplifyUrl = (url) => {
+  return url
+    .replace("https://", "")
+    .replace("http://", "")
+    .replace("www.", "")
+    .replace(/\/.*/, ""); // 删除 / 开头的内容
+};
 const render = () => {
-  hashMap.forEach((node) => {
+  $siteList.find("li:not(.lastList)").remove();
+  hashMap.forEach((node, index) => {
     const $li = $(`<li>
-  <a href="${node.url}">
+  
     <div class="site">
-      <div class="log">${node.logo[0]}</div>
-      <div class="link">${node.url}</div>
+      <div class="log">${node.logo}</div>
+      <div class="link">${simplifyUrl(node.url)}</div>
+      <div class="close">
+        <svg class="icon">
+          <use xlink:href="#icon-close"></use>
+        </svg>
+      </div>
     </div>
-  </a>
+  
 </li>`).insertBefore($lastList);
+    $li.on("click", () => {
+      window.open(node.url);
+    });
+
+    $li.on("click", ".close", (e) => {
+      e.stopPropagation();
+      hashMap.splice(index, 1);
+
+      render();
+    });
   });
 };
 render();
@@ -31,9 +50,11 @@ $(".addButton").on("click", () => {
     url = "http://" + url;
   }
 
-  hashMap.push({ logo: url[7], logoType: "text", url: url });
+  hashMap.push({
+    logo: simplifyUrl(url)[0].toUpperCase(),
+    url: url,
+  });
 
-  $siteList.find("li:not(.lastList)").remove();
   render();
 });
 window.onbeforeunload = () => {
